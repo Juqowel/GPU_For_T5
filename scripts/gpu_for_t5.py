@@ -28,9 +28,9 @@ class T5onOtherDevice(scripts.Script):
             choise = gr.Radio(label='Select device', choices=device_list, value=device_list[0][1])
             enabled.change(lambda i, c: print(f"{ f'T5 on Other Device is enabled for' if i else f'T5 on Other Device is disabled for'}{' img2img' if is_img2img else ' txt2img'} and {c}"), inputs=[enabled, choise], outputs=[])
             choise.change(lambda i, c: print(f"{f'T5 on Other Device is enabled for' if i else f'T5 on Other Device is disabled for'} {'img2img' if is_img2img else 'txt2img'} and {c}"), inputs=[enabled, choise], outputs=[])
-            gr.Markdown("""**Warning:**""")
-            gr.Markdown("""T5 GGUF is not supported.""")
-        return [choise, enabled]
+            lowvram = gr.Checkbox(False, label="LowVRAM", info="Enable if you see LowVRAM warning in console:")
+            gr.Markdown("""**Note:** T5 GGUF is not supported.""")
+        return [choise, enabled, lowvram]
 
     def process(self, p, *script_args, **kwargs):
         if not script_args[0]:
@@ -39,6 +39,6 @@ class T5onOtherDevice(scripts.Script):
             p.sd_model.forge_objects.clip.patcher.load_device=torch.device(f'{memory_management.get_torch_device()}')
             memory_management.lowvram_available = lowvram_available
             return
-        memory_management.lowvram_available = False
+        memory_management.lowvram_available = script_args[2]
         p.sd_model.forge_objects.clip.patcher.load_device=torch.device(f'{script_args[0]}')
         return
