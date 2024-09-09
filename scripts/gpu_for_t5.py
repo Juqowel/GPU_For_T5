@@ -28,6 +28,8 @@ class T5onOtherDevice(scripts.Script):
             choise = gr.Radio(label='Select device', choices=device_list, value=device_list[0][1])
             enabled.change(lambda i, c: print(f"{ f'T5 on Other Device is enabled for' if i else f'T5 on Other Device is disabled for'}{' img2img' if is_img2img else ' txt2img'} and {c}"), inputs=[enabled, choise], outputs=[])
             choise.change(lambda i, c: print(f"{f'T5 on Other Device is enabled for' if i else f'T5 on Other Device is disabled for'} {'img2img' if is_img2img else 'txt2img'} and {c}"), inputs=[enabled, choise], outputs=[])
+            gr.Markdown("""**Warning:**""")
+            gr.Markdown("""T5 GGUF is not supported.""")
         return [choise, enabled]
 
     def process(self, p, *script_args, **kwargs):
